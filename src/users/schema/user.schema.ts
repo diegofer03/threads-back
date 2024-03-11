@@ -3,18 +3,21 @@ import { HydratedDocument } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema()
+@Schema({
+  autoCreate: true,
+  autoIndex: true,
+})
 export class User {
-  @Prop()
+  @Prop({ required: true, maxlength: 50 })
   name: string;
 
-  @Prop()
+  @Prop({ required: true, maxlength: 50, unique: true })
   email: string;
 
-  @Prop()
+  @Prop({ required: true, maxlength: 50 })
   password: string;
 
-  @Prop()
+  @Prop({ required: true, maxlength: 50, unique: true })
   userName: string;
 }
 
