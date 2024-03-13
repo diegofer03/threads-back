@@ -11,19 +11,37 @@ export class CommentsService {
     @InjectModel(Comment.name) private commentModel: Model<Comment>,
   ) {}
 
-  create(createCommentDto: CreateCommentDto) {
+  async create(createCommentDto: CreateCommentDto) {
     const createComment = this.commentModel.create({
       text: createCommentDto.text,
       user: createCommentDto.userId,
       parent: createCommentDto.parentId || null,
     });
-    return createComment.then((doc) => {
+    return await createComment.then((doc) => {
       return doc.populate(['user', 'parent']);
     });
   }
 
   findAll() {
     return this.commentModel.find().populate(['user', 'parent']).exec();
+  }
+
+  findTopLevelComments() {
+    return this.commentModel
+      .find({
+        parent: null,
+      })
+      .populate(['user'])
+      .exec();
+  }
+
+  findComementsByParentId(id: string) {
+    return this.commentModel
+      .find({
+        parent: id,
+      })
+      .populate(['user'])
+      .exec();
   }
 
   findOne(id: number) {
