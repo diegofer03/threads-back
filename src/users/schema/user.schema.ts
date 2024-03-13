@@ -14,7 +14,7 @@ export class User {
   @Prop({ required: true, maxlength: 50, unique: true })
   email: string;
 
-  @Prop({ required: true, maxlength: 250 })
+  @Prop({ required: true, maxlength: 250, select: false })
   password: string;
 
   @Prop({ required: true, maxlength: 50, unique: true })
@@ -23,11 +23,11 @@ export class User {
 
 const UserSchema = SchemaFactory.createForClass(User);
 
-UserSchema.set('toJSON', {
-  transform: function (doc, ret) {
-    delete ret['password'];
-    return ret;
-  },
-});
+// UserSchema.set('toJSON', {
+//   transform: function (doc, ret) {
+//     delete ret['password'];
+//     return ret;
+//   },
+// });
 
 export default UserSchema;

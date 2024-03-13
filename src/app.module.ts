@@ -6,7 +6,7 @@ import { CommentsModule } from './comments/comments.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
-import { ValidationErrorFilter } from './validation/mongo-validation.filter';
+import { AllExceptionsFilter } from './validation/mongo-validation.filter';
 
 @Module({
   imports: [
@@ -29,7 +29,7 @@ import { ValidationErrorFilter } from './validation/mongo-validation.filter';
     AppService,
     {
       provide: APP_FILTER,
-      useClass: ValidationErrorFilter,
+      useClass: AllExceptionsFilter,
     },
   ],
 })

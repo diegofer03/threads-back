@@ -6,9 +6,10 @@ import {
   Patch,
   Param,
   Delete,
-  HttpException,
-  HttpStatus,
+  BadRequestException,
+  NotAcceptableException,
   NotFoundException,
+  HttpCode,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,11 +20,34 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto) {
     try {
-      return this.usersService.create(createUserDto);
+      const user = await this.usersService.create(createUserDto);
+      user.password = undefined;
+      return user;
     } catch (error) {
-      throw new NotFoundException()
+      if (error.message.includes('duplicate')) {
+        throw new NotAcceptableException('email or userName already exists', {
+          cause: new Error(error.message),
+        });
+      } else {
+        throw new BadRequestException(error.message, {
+          cause: new Error(error.message),
+        });
+      }
+    }
+  }
+
+  @Post('findByEmail')
+  @HttpCode(200)
+  async findByEmail(@Body() email: object) {
+    try {
+      const user = await this.usersService.findByEmail(email);
+      return user;
+    } catch (error) {
+      throw new NotFoundException(error.message, {
+        cause: new Error(error.message),
+      });
     }
   }
 
