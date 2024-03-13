@@ -11,13 +11,13 @@ export class CommentsService {
     @InjectModel(Comment.name) private commentModel: Model<Comment>,
   ) {}
 
-  create(createCommentDto: CreateCommentDto) {
+  async create(createCommentDto: CreateCommentDto) {
     const createComment = this.commentModel.create({
       text: createCommentDto.text,
       user: createCommentDto.userId,
       parent: createCommentDto.parentId || null,
     });
-    return createComment.then((doc) => {
+    return await createComment.then((doc) => {
       return doc.populate(['user', 'parent']);
     });
   }
