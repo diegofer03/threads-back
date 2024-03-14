@@ -10,10 +10,14 @@ import {
   NotAcceptableException,
   NotFoundException,
   HttpCode,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import * as bcrypt from 'bcrypt';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -40,10 +44,17 @@ export class UsersController {
 
   @Post('findByEmail')
   @HttpCode(200)
-  async findByEmail(@Body() email: object) {
+  async findByEmail(@Body() loginUserDto: LoginUserDto) {
     try {
-      const user = await this.usersService.findByEmail(email);
-      return user;
+      const user = await this.usersService.findByEmail(loginUserDto.email);
+      const login = await bcrypt.compare(loginUserDto.password, user.password);
+      user.password = undefined;
+      if (login) return user;
+      else
+        throw new HttpException(
+          'User or password invalid',
+          HttpStatus.UNAUTHORIZED,
+        );
     } catch (error) {
       throw new NotFoundException(error.message, {
         cause: new Error(error.message),

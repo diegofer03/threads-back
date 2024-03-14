@@ -17,8 +17,11 @@ export class UsersService {
     return await userSave.save();
   }
 
-  async findByEmail(email: object) {
-    const users = await this.userModel.find(email).select(['+password']).exec();
+  async findByEmail(email: string) {
+    const users = await this.userModel
+      .findOne({ email: email })
+      .select(['+password'])
+      .exec();
     return users;
   }
 
