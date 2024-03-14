@@ -22,12 +22,12 @@ export class CommentsService {
     });
   }
 
-  findAll() {
-    return this.commentModel.find().populate(['user', 'parent']).exec();
+  async findAll() {
+    return await this.commentModel.find().populate(['user', 'parent']).exec();
   }
 
-  findTopLevelComments() {
-    return this.commentModel
+  async findTopLevelComments() {
+    return await this.commentModel
       .find({
         parent: null,
       })
@@ -35,8 +35,8 @@ export class CommentsService {
       .exec();
   }
 
-  findComementsByParentId(id: string) {
-    return this.commentModel
+  async findComementsByParentId(id: string) {
+    return await this.commentModel
       .find({
         parent: id,
       })
@@ -44,15 +44,15 @@ export class CommentsService {
       .exec();
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} comment`;
   }
 
-  update(id: number, updateCommentDto: UpdateCommentDto) {
+  update(id: string, updateCommentDto: UpdateCommentDto) {
     return `This action updates a #${id} comment ${updateCommentDto}`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} comment`;
   }
 }

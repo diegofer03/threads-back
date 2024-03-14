@@ -14,7 +14,15 @@ export class UsersService {
     const hashPassword = await bcrypt.hash(createUserDto.password, 10);
     createUserDto.password = hashPassword;
     const userSave = new this.userModel(createUserDto);
-    return userSave.save();
+    return await userSave.save();
+  }
+
+  async findByEmail(email: string) {
+    const users = await this.userModel
+      .findOne({ email: email })
+      .select(['+password'])
+      .exec();
+    return users;
   }
 
   findAll() {
