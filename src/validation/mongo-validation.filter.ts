@@ -30,10 +30,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const status = exception.getStatus();
-
-    response.status(status).json({
-      statusCode: status,
-      error: exception.message,
-    });
+    response.status(status).json(exception.getResponse());
   }
 }

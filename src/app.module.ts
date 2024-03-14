@@ -7,12 +7,14 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './validation/mongo-validation.filter';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     UsersModule,
     CommentsModule,
-    ConfigModule.forRoot(),
+    AuthModule,
+    ConfigModule.forRoot({ isGlobal: true }),
     // MongooseModule.forRoot(
     //   '',
     // ),
