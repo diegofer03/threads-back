@@ -10,4 +10,6 @@ export class CreateCommentDto {
   userId: string;
 
   parentId: string | null;
+
+  likes: number | null;
 }

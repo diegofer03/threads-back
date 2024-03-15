@@ -44,15 +44,15 @@ export class CommentsService {
       .exec();
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} comment`;
+  async findOne(id: string) {
+    return await this.commentModel.findById(id).exec();
   }
 
-  update(id: string, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment ${updateCommentDto}`;
+  async update(id: string, updateCommentDto: UpdateCommentDto) {
+    return await this.commentModel.updateOne({ _id: id }, updateCommentDto);
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} comment`;
+  async remove(id: string) {
+    return await this.commentModel.deleteOne({ _id: id });
   }
 }

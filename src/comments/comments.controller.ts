@@ -9,6 +9,7 @@ import {
   Query,
   // BadRequestException,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -19,8 +20,14 @@ export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentsService.create(createCommentDto);
+  async create(@Body() createCommentDto: CreateCommentDto) {
+    try {
+      return await this.commentsService.create(createCommentDto);
+    } catch (error) {
+      throw new BadRequestException(error.message, {
+        cause: new Error(error.message),
+      });
+    }
   }
 
   @Get()
