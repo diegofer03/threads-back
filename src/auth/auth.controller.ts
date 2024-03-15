@@ -22,7 +22,7 @@ export class AuthController {
     private jwtService: JwtService,
   ) {}
   @Post('signup')
-  async create(@Body() createUserDto: CreateUserDto) {
+  async signUp(@Body() createUserDto: CreateUserDto) {
     try {
       const user = await this.usersService.create(createUserDto);
       user.password = undefined;
