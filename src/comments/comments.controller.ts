@@ -9,22 +9,31 @@ import {
   Query,
   // BadRequestException,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { ApiBody, ApiQuery, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('comments')
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentsService.create(createCommentDto);
+  async create(@Body() createCommentDto: CreateCommentDto) {
+    try {
+      return await this.commentsService.create(createCommentDto);
+    } catch (error) {
+      throw new BadRequestException(error.message, {
+        cause: new Error(error.message),
+      });
+    }
   }
 
   @Get()
-  // @UseFilters(new AllExceptionsFilter())
+  @ApiQuery({ name: 'parentId', required: false, type: 'string' })
   async findAll(@Query() queryParams) {
     try {
       if (queryParams.parentId)
@@ -44,6 +53,7 @@ export class CommentsController {
     return this.commentsService.findOne(id);
   }
 
+  @ApiBody({ type: [CreateCommentDto] })
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
     return this.commentsService.update(id, updateCommentDto);
