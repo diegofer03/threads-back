@@ -14,7 +14,9 @@ import {
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { ApiBody, ApiQuery, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('comments')
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
@@ -31,7 +33,7 @@ export class CommentsController {
   }
 
   @Get()
-  // @UseFilters(new AllExceptionsFilter())
+  @ApiQuery({ name: 'parentId', required: false, type: 'string' })
   async findAll(@Query() queryParams) {
     try {
       if (queryParams.parentId)
@@ -51,6 +53,7 @@ export class CommentsController {
     return this.commentsService.findOne(id);
   }
 
+  @ApiBody({ type: [CreateCommentDto] })
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
     return this.commentsService.update(id, updateCommentDto);
