@@ -29,6 +29,13 @@ export class UsersService {
     return this.userModel.find().exec();
   }
 
+  async findByUsername(user: string) {
+    const users = await this.userModel
+      .find({ userName: { $regex: user, $options: 'i' } })
+      .exec();
+    return users;
+  }
+
   async findOne(id: string) {
     return await this.userModel.findById(id).exec();
   }

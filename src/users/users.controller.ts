@@ -7,6 +7,7 @@ import {
   Delete,
   UseGuards,
   BadRequestException,
+  Post,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -29,6 +30,18 @@ export class UsersController {
   async findOne(@Param('id') id: string) {
     try {
       return await this.usersService.findOne(id);
+    } catch (error) {
+      throw new BadRequestException(error.message, {
+        cause: new Error(error.message),
+      });
+    }
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('getByUsername')
+  async findByUsername(@Body() body: any) {
+    try {
+      return await this.usersService.findByUsername(body.userName);
     } catch (error) {
       throw new BadRequestException(error.message, {
         cause: new Error(error.message),
