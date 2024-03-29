@@ -49,18 +49,61 @@ export class CommentsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.commentsService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    try {
+      return await this.commentsService.findOne(id);
+    } catch (error) {
+      throw new NotFoundException(error.message, {
+        cause: new Error(error.message),
+      });
+    }
+  }
+
+  @Get('getTopByUserId/:id')
+  async findByUserId(@Param('id') id: string) {
+    try {
+      return await this.commentsService.findTopByUserId(id);
+    } catch (error) {
+      throw new NotFoundException(error.message, {
+        cause: new Error(error.message),
+      });
+    }
+  }
+
+  @Get('getRepliesByUserId/:id')
+  async findRepliesByUserId(@Param('id') id: string) {
+    try {
+      return await this.commentsService.findRepliesByUserId(id);
+    } catch (error) {
+      throw new NotFoundException(error.message, {
+        cause: new Error(error.message),
+      });
+    }
   }
 
   @ApiBody({ type: [CreateCommentDto] })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentsService.update(id, updateCommentDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateCommentDto: UpdateCommentDto,
+  ) {
+    try {
+      return await this.commentsService.update(id, updateCommentDto);
+    } catch (error) {
+      throw new NotFoundException(error.message, {
+        cause: new Error(error.message),
+      });
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.commentsService.remove(id);
+  async remove(@Param('id') id: string) {
+    try {
+      return await this.commentsService.remove(id);
+    } catch (error) {
+      throw new NotFoundException(error.message, {
+        cause: new Error(error.message),
+      });
+    }
   }
 }

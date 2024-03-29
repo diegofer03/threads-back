@@ -35,6 +35,26 @@ export class CommentsService {
       .exec();
   }
 
+  async findTopByUserId(id: string) {
+    return await this.commentModel
+      .find({
+        user: id,
+        parent: null,
+      })
+      .populate(['user'])
+      .exec();
+  }
+
+  async findRepliesByUserId(id: string) {
+    return await this.commentModel
+      .find({
+        user: id,
+        parent: { $ne: null },
+      })
+      .populate(['user'])
+      .exec();
+  }
+
   async findComementsByParentId(id: string) {
     return await this.commentModel
       .find({
