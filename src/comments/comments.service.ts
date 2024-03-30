@@ -51,7 +51,7 @@ export class CommentsService {
         user: id,
         parent: { $ne: null },
       })
-      .populate(['user'])
+      .populate(['user', 'parent'])
       .exec();
   }
 
