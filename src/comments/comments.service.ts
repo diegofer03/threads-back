@@ -65,7 +65,7 @@ export class CommentsService {
   }
 
   async findOne(id: string) {
-    return await this.commentModel.findById(id).exec();
+    return await this.commentModel.findById(id).populate(['user']).exec();
   }
 
   async update(id: string, updateCommentDto: UpdateCommentDto) {
